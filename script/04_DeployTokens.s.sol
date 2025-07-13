@@ -12,7 +12,7 @@ contract DeployTokens is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        MockERC20 token0 = new MockERC20("MXNB", "MXNB", 18, 1_000_000 ether);
+        MockERC20 token0 = new MockERC20("MXNB", "MXNB", 6, 1_000_000 ether);
         MockERC20 token1 = new MockERC20("USDC", "USDC", 6, 1_000_000 ether);
 
         console.log("Token 0 deployed at: ", address(token0));

@@ -21,7 +21,7 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
     /////////////////////////////////////
     // --- Configure These ---
     /////////////////////////////////////
-    Currency mxnb = Currency.wrap(address(0x6adC6e83Ebe1b63F6a360f8fF1feF1F84A79291e));
+    Currency mxnb = Currency.wrap(address(token0));
     uint24 lpFee = 500; // 0.05%
     int24 tickSpacing = 10;
     uint160 startingPrice;
@@ -50,6 +50,10 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
 
         bytes memory hookData = new bytes(0);
 
+        if (!(mxnb == currency0)) {
+            (token0Amount, token1Amount) = (token1Amount, token0Amount);
+        }
+
         startingPrice = encodeSqrtRatioX96(token1Amount, token0Amount);
 
         int24 currentTick = TickMath.getTickAtSqrtPrice(startingPrice);
@@ -57,9 +61,7 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
         tickLower = ((currentTick - 750 * tickSpacing) / tickSpacing) * tickSpacing;
         tickUpper = ((currentTick + 750 * tickSpacing) / tickSpacing) * tickSpacing;
 
-        if (!(mxnb == currency0)) {
-            (token0Amount, token1Amount) = (token1Amount, token0Amount);
-        }
+        
         
         // Converts token amounts to liquidity units
         uint128 liquidity = LiquidityAmounts.getLiquidityForAmounts(

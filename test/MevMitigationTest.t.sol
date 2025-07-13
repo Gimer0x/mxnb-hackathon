@@ -125,7 +125,7 @@ contract MevMitigationTest is Test, Deployers {
             amountOutMin: 0, // This is Very bad, only for testing purposes.
             zeroForOne: true,
             poolKey: poolKey,
-            hookData: abi.encode(sender),
+            hookData: Constants.ZERO_BYTES,
             receiver: address(this),
             deadline: block.timestamp + 1
         });

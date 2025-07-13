@@ -25,10 +25,12 @@ contract BaseScript is Script {
     // --- Configure These ---
     /////////////////////////////////////
     // 6 decimals  
-    IERC20 internal constant token0 = IERC20(0x6adC6e83Ebe1b63F6a360f8fF1feF1F84A79291e);
+    IERC20 internal constant token0 = IERC20(0x82B9e52b26A2954E113F94Ff26647754d5a4247D);
 
     // 6 decimals
-    IERC20 internal constant token1 = IERC20(0x2d09B9a91132e2E394A7C43e0d7FE7a81Ed96e3B);
+    IERC20 internal constant token1 = IERC20(0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d);
+
+    // Get hook address
     IHooks constant hookContract = IHooks(address(0));
     /////////////////////////////////////
 
