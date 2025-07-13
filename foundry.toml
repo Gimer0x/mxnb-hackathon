@@ -1,0 +1,21 @@
+[profile.default]
+evm_version = "cancun"
+ffi = true
+libs = ["lib"]
+out = "out"
+solc_version = "0.8.28"
+src = "src"
+gas_limit = 30000000
+gas_price = 10000000000
+
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+alchemy_sepolia="${ALCHEMY_SEPOLIA_RPC}"
+local = "http://127.0.0.1:8545"
+
+PRIVATE_KEY_LOCAL = "${PRIVATE_KEY_LOCAL}"
+PRIVATE_KEY = "${PRIVATE_KEY}"
+
+[etherscan]
+sepolia = { key = "${SEPOLIA_API_KEY}" }
