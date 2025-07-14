@@ -24,10 +24,10 @@ contract BaseScript is Script {
     /////////////////////////////////////
     // --- Configure These ---
     /////////////////////////////////////
-    // 6 decimals  
+    // MXNB
     IERC20 internal constant token0 = IERC20(0x82B9e52b26A2954E113F94Ff26647754d5a4247D);
 
-    // 6 decimals
+    // USDC
     IERC20 internal constant token1 = IERC20(0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d);
 
     // Get hook address
@@ -55,9 +55,6 @@ contract BaseScript is Script {
         vm.label(address(swapRouter), "SwapRouter");
         vm.label(address(hookContract), "HookContract");
     }
-
-    // Router: 0x3a9d48ab9751398bbfa63ad67599bb04e4bdf98b
-    // address(swapRouter) 0x00000000000044a361Ae3cAc094c9D1b14Eece97
 
     function getCurrencies() public pure returns (Currency, Currency) {
         require(address(token0) != address(token1));

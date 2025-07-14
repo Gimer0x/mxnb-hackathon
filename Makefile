@@ -6,7 +6,7 @@ build:
 
 deploy-tokens:
 	forge script script/04_DeployTokens.s.sol:DeployTokens \
-		--rpc-url sepolia \
+		--rpc-url arbitrum_sepolia \
 		--broadcast \
 		--private-key $(PRIVATE_KEY) \
 		--verify
@@ -19,13 +19,13 @@ deploy-tokens-local:
 
 create-pool:
 	forge script script/01_CreatePoolAndAddLiquidity.s.sol:CreatePoolAndAddLiquidityScript \
-		--rpc-url sepolia \
+		--rpc-url arbitrum_sepolia \
 		--private-key $(PRIVATE_KEY)\
 		--broadcast
 
 make-swap:
 	forge script script/03_Swap.s.sol:SwapScript \
-		--rpc-url sepolia \
+		--rpc-url arbitrum_sepolia \
 		--private-key $(PRIVATE_KEY)\
 		--broadcast
 
@@ -42,4 +42,4 @@ deploy-hook-local:
 		--broadcast
 
 anvil-fork:
-	anvil --fork-url sepolia
+	anvil --fork-url arbitrum_sepolia
