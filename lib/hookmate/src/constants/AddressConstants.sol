@@ -159,6 +159,11 @@ library AddressConstants {
             return address(0x00000000000044a361Ae3cAc094c9D1b14Eece97); // Sepolia
         }
 
+        if (chainId == 421614) {
+            return address(0x39e08934FB9b095a62B2C77b249AA1ce81759402); // Arbitrum Sepolia
+        }
+        
+
         revert UnsupportedChainId();
     }
 }

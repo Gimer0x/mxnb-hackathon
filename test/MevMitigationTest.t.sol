@@ -51,6 +51,7 @@ contract MevMitigationTest is Test, Deployers {
     uint256 tokenId;
     int24 tickLower;
     int24 tickUpper;
+    address sender;
 
     function setUp() public {
         // Deploys all required artifacts.
@@ -118,7 +119,7 @@ contract MevMitigationTest is Test, Deployers {
         uint256 amountIn = 1e18;
         // Execute this transaction at a higher gas price.
         vm.txGasPrice(12 gwei);
-        address sender = 0xDa058764580d50AA1cfdae93430583cd4CdFc98a;
+        sender = 0xDa058764580d50AA1cfdae93430583cd4CdFc98a;
         
         BalanceDelta swapDelta = swapRouter.swapExactTokensForTokens({
             amountIn: amountIn,

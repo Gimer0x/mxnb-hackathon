@@ -23,7 +23,7 @@ create-pool:
 		--private-key $(PRIVATE_KEY)\
 		--broadcast
 
-make-swap:
+swap-tokens:
 	forge script script/03_Swap.s.sol:SwapScript \
 		--rpc-url arbitrum_sepolia \
 		--private-key $(PRIVATE_KEY)\
@@ -39,6 +39,12 @@ deploy-hook-local:
 	forge script script/00_DeployHook.s.sol:DeployHookScript \
 		--rpc-url local \
 		--private-key $(PRIVATE_KEY_LOCAL) \
+		--broadcast
+
+deploy-hook-arb-sepolia:
+	forge script script/00_DeployHook.s.sol:DeployHookScript \
+		--rpc-url arbitrum_sepolia \
+		--private-key $(PRIVATE_KEY) \
 		--broadcast
 
 anvil-fork:

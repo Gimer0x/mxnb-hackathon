@@ -37,7 +37,7 @@ contract MEVMitigationHook is BaseHook {
     mapping(uint256 => uint256) public currentBlock;
 
     error MustUseDynamicFee();
-
+    // Constructor
     constructor(IPoolManager _poolManager, address _feedAddress) BaseHook(_poolManager) {
         // Need to find a better value
         fee = INITIAL_FEE;
