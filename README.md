@@ -1,85 +1,265 @@
-# Uniswap v4 Hook Template
+# MEV Mitigation Hook for Uniswap V4
 
-**A template for writing Uniswap v4 Hooks 🦄**
+A sophisticated MEV (Maximal Extractable Value) mitigation hook for Uniswap V4 that dynamically adjusts fees based on detected front-running, back-running, and sandwich attack patterns. This hook is specifically designed for MXNB/USDC liquidity pools on Arbitrum Sepolia.
 
-### Get Started
+## 🎯 Overview
 
-This template provides a starting point for writing Uniswap v4 Hooks, including a simple example and preconfigured test environment. Start by creating a new repository using the "Use this template" button at the top right of this page. Alternatively you can also click this link:
+This project implements an intelligent fee adjustment mechanism that protects liquidity providers from common MEV attacks by:
 
-[![Use this Template](https://img.shields.io/badge/Use%20this%20Template-101010?style=for-the-badge&logo=github)](https://github.com/uniswapfoundation/v4-template/generate)
+- **Front-running Detection**: Monitors transaction priority fees to detect potential front-running attempts
+- **Back-running Protection**: Tracks price movements within the same block to identify back-running patterns
+- **Sandwich Attack Mitigation**: Detects opposite-direction swaps in the same block and adjusts fees accordingly
+- **Volatility-Based Pricing**: Integrates with Chainlink price feeds to adjust fees based on market volatility
 
-1. The example hook [Counter.sol](src/Counter.sol) demonstrates the `beforeSwap()` and `afterSwap()` hooks
-2. The test template [Counter.t.sol](test/Counter.t.sol) preconfigures the v4 pool manager, test tokens, and test liquidity.
+## 🏗️ Architecture
 
-<details>
-<summary>Updating to v4-template:latest</summary>
+### Core Components
 
-This template is actively maintained -- you can update the v4 dependencies, scripts, and helpers:
+- **MEVMitigationHook**: Main hook contract implementing the MEV protection logic
+- **PriceConsumerV3**: Chainlink price feed integration for volatility assessment
+- **Dynamic Fee System**: Adaptive fee structure based on attack patterns and market conditions
+
+### Fee Structure
+
+| Attack Type | Fee Increase | Description |
+|-------------|--------------|-------------|
+| Base Fee | 0.03% | Initial pool fee |
+| Front-running | +0.5% | High priority fee detection |
+| Back-running | +0.6% | Price manipulation detection |
+| Low Volatility | +1.0% | Market stability period |
+| Medium Volatility | +1.5% | Normal market conditions |
+| High Volatility | +2.0% | High market volatility |
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Foundry](https://getfoundry.sh/) (latest stable version)
+- Node.js and npm
+- Access to Arbitrum Sepolia testnet
+
+### Installation
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone <repository-url>
+   cd mxnb-hackathon
+   forge install
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Add your configuration to `.env`:
+   ```env
+   PRIVATE_KEY=your_private_key_here
+   PRIVATE_KEY_LOCAL=your_local_test_key
+   ARBITRUM_SEPOLIA_RPC=your_rpc_url
+   ```
+
+3. **Build the project:**
+   ```bash
+   make build
+   ```
+
+4. **Run tests:**
+   ```bash
+   forge test
+   ```
+
+## 📋 Deployment Guide
+
+### 1. Deploy Hook to Arbitrum Sepolia
 
 ```bash
-git remote add template https://github.com/uniswapfoundation/v4-template
-git fetch template
-git merge template/main <BRANCH> --allow-unrelated-histories
+make deploy-hook-arb-sepolia
 ```
 
-</details>
-
-### Requirements
-
-This template is designed to work with Foundry (stable). If you are using Foundry Nightly, you may encounter compatibility issues. You can update your Foundry installation to the latest stable version by running:
-
-```
-foundryup
+**Important**: After deployment, update the hook address in `script/base/BaseScript.sol`:
+```solidity
+IHooks constant hookContract = IHooks(0xYOUR_DEPLOYED_HOOK_ADDRESS);
 ```
 
-To set up the project, run the following commands in your terminal to install dependencies and run the tests:
+### 2. Deploy Tokens (if needed)
 
+```bash
+make deploy-tokens
 ```
-forge install
-forge test
+
+### 3. Create Liquidity Pool
+
+Configure your liquidity position in `script/01_CreatePoolAndAddLiquidity.s.sol`:
+```solidity
+uint256 public token0Amount = 18740e6; // MXNB amount
+uint256 public token1Amount = 1000e6;  // USDC amount
 ```
+
+Then create the pool:
+```bash
+make create-pool
+```
+
+### 4. Execute Swaps
+
+```bash
+make swap-tokens
+```
+
+## 🧪 Testing
 
 ### Local Development
 
-Other than writing unit tests (recommended!), you can only deploy & test hooks on [anvil](https://book.getfoundry.sh/anvil/) locally. Scripts are available in the `script/` directory, which can be used to deploy hooks, create pools, provide liquidity and swap tokens. The scripts support both local `anvil` environment as well as running them directly on a production network.
+1. **Start local anvil instance:**
+   ```bash
+   make anvil-fork
+   ```
 
-### Troubleshooting
+2. **Deploy hook locally:**
+   ```bash
+   make deploy-hook-local
+   ```
 
-<details>
+3. **Create local pool:**
+   ```bash
+   make create-local
+   ```
 
-#### Permission Denied
+### Test Coverage
 
-When installing dependencies with `forge install`, Github may throw a `Permission Denied` error
+The project includes comprehensive tests covering:
+- Front-running fee detection
+- Back-running mitigation
+- Sandwich attack protection
+- Volatility-based fee adjustments
 
-Typically caused by missing Github SSH keys, and can be resolved by following the steps [here](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)
-
-Or [adding the keys to your ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent), if you have already uploaded SSH keys
-
-#### Anvil fork test failures
-
-Some versions of Foundry may limit contract code size to ~25kb, which could prevent local tests to fail. You can resolve this by setting the `code-size-limit` flag
-
+Run tests with:
+```bash
+forge test
 ```
-anvil --code-size-limit 40000
+
+## 🔧 Configuration
+
+### Hook Parameters
+
+Key parameters can be adjusted in `src/MEVMitigationHook.sol`:
+
+```solidity
+uint24 public constant INITIAL_FEE = 300;        // 0.03%
+uint24 public constant BASE_FEE = 5_000;         // 0.5%
+uint24 public constant LOWER_PRICE_FEE = 6_000;  // 0.6%
+uint24 public HIGH_VOLATILITY_FEE = 20_000;      // 2.0%
+uint24 public MEDIUM_VOLATILITY_FEE = 15_000;    // 1.5%
+uint24 public LOW_VOLATILITY_FEE = 10_000;       // 1.0%
 ```
 
-#### Hook deployment failures
+### Volatility Thresholds
 
-Hook deployment failures are caused by incorrect flags or incorrect salt mining
+Volatility-based fee adjustments:
+- **Low Volatility**: < 75 (1.0% fee)
+- **Medium Volatility**: 75-200 (1.5% fee)
+- **High Volatility**: ≥ 200 (2.0% fee)
 
-1. Verify the flags are in agreement:
-   - `getHookCalls()` returns the correct flags
-   - `flags` provided to `HookMiner.find(...)`
-2. Verify salt mining is correct:
-   - In **forge test**: the _deployer_ for: `new Hook{salt: salt}(...)` and `HookMiner.find(deployer, ...)` are the same. This will be `address(this)`. If using `vm.prank`, the deployer will be the pranking address
-   - In **forge script**: the deployer must be the CREATE2 Proxy: `0x4e59b44847b379578588920cA78FbF26c0B4956C`
-     - If anvil does not have the CREATE2 deployer, your foundry may be out of date. You can update it with `foundryup`
+## 📊 Contract Addresses
 
-</details>
+### Arbitrum Sepolia
 
-### Additional Resources
+| Contract | Address |
+|----------|---------|
+| Hook Contract | `0xc588c10682461BacFB24d14f75D1a60f0E9E6080` |
+| MXNB Token | `0x82B9e52b26A2954E113F94Ff26647754d5a4247D` |
+| USDC Token | `0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d` |
+| Price Feed | `0x03121C1a9e6b88f56b27aF5cc065ee1FaF3CB4A9` |
 
-- [Uniswap v4 docs](https://docs.uniswap.org/contracts/v4/overview)
-- [v4-periphery](https://github.com/uniswap/v4-periphery)
-- [v4-core](https://github.com/uniswap/v4-core)
-- [v4-by-example](https://v4-by-example.org)
+### Demo Transaction
+
+View the demonstration swap transaction: [Arbiscan](https://sepolia.arbiscan.io/tx/0x562b4beb80eb1aeace521ba76fb5575dfd81d3bcafabf3e3f57bab1d0bda67c8)
+
+## 🛠️ Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `make build` | Build all contracts |
+| `make deploy-hook-arb-sepolia` | Deploy hook to Arbitrum Sepolia |
+| `make deploy-hook-local` | Deploy hook locally |
+| `make create-pool` | Create pool on Arbitrum Sepolia |
+| `make create-local` | Create pool locally |
+| `make swap-tokens` | Execute swap on Arbitrum Sepolia |
+| `make anvil-fork` | Start local anvil with Arbitrum Sepolia fork |
+
+## 🔍 How It Works
+
+### MEV Detection Logic
+
+1. **Front-running Detection**:
+   - Monitors transaction priority fees (EIP-1559 tips)
+   - Increases fees when priority fees exceed threshold (10 gwei)
+
+2. **Back-running Protection**:
+   - Tracks price movements within the same block
+   - Detects price decreases that indicate back-running attempts
+
+3. **Sandwich Attack Mitigation**:
+   - Identifies opposite-direction swaps in the same block
+   - Applies additional fees based on market volatility
+
+4. **Volatility Assessment**:
+   - Integrates with Chainlink price feeds
+   - Adjusts fees based on market volatility levels
+
+### Gas Optimization
+
+The hook uses several gas optimization techniques:
+- Packed storage for mapping keys
+- Efficient bit manipulation for price calculations
+- Minimal storage operations
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+1. **Hook Deployment Failures**:
+   - Ensure you're using the latest Foundry version
+   - Check that CREATE2 factory is available on your network
+   - Verify hook flags match the deployed address
+
+2. **Gas Limit Issues**:
+   - Increase gas limit for hook deployment: `--gas-limit 50000000`
+   - Hook mining can be gas-intensive
+
+3. **Test Failures**:
+   - Update Foundry: `foundryup`
+   - Clear cache: `forge clean`
+   - Check dependency versions
+
+### Environment Setup
+
+For local development:
+```bash
+# Start anvil with higher gas limit
+anvil --gas-limit 50000000
+
+# In another terminal
+forge script script/00_DeployHook.s.sol:DeployHookScript \
+  --rpc-url local \
+  --private-key YOUR_PRIVATE_KEY \
+  --broadcast \
+  --gas-limit 50000000
+```
+
+## 📚 Resources
+
+- [Uniswap V4 Documentation](https://docs.uniswap.org/contracts/v4/overview)
+- [V4 Hooks Template](https://github.com/uniswapfoundation/v4-template)
+- [Foundry Documentation](https://book.getfoundry.sh/)
+- [Chainlink Price Feeds](https://docs.chain.link/data-feeds)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Note**: This hook is designed for educational and experimental purposes. Always test thoroughly before using in production environments.
+
