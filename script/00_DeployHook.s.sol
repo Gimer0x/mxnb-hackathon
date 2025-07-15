@@ -12,7 +12,6 @@ import {PriceConsumerV3} from "../src/utils/PriceConsumerV3.sol";
 
 /// @notice Mines the address and deploys the MEVMitigation.sol Hook contract
 contract DeployHookScript is BaseScript {
-    //address constant CREATE2_FACTORY2 = 0x3fAB184622Dc19b6109349B94811493BF2a45362;
     error HookDeploymentFailed();
 
     function run() public {
@@ -24,8 +23,6 @@ contract DeployHookScript is BaseScript {
         );
 
         // Mine a salt that will produce a hook address with the correct flags
-        // Sepolia
-        // address feedAddress = 0xc59E3633BAAC79493d908e63626716e204A45EdF;
         // Arbitrum Sepolia
         address feedAddress = 0x03121C1a9e6b88f56b27aF5cc065ee1FaF3CB4A9;
         

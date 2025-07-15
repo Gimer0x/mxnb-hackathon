@@ -6,9 +6,6 @@ import { ERC20Pausable } from "@openzeppelin/contracts/token/ERC20/extensions/ER
 import { ERC20Burnable } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-// Token 0 deployed at:  0xa6Ba18733D4B91c226F935a0d6e7fE4C2d794CE7
-// Token 1 deployed at:  0x49fAf79FdfC95cA1B78B27138B3602420ACB35f6
-
 contract MockERC20 is ERC20, ERC20Pausable, ERC20Burnable, Ownable {
     /**
      * @notice Token decimals

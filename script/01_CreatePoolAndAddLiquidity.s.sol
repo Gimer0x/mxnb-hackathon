@@ -27,11 +27,8 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
     uint160 startingPrice;
 
     // --- liquidity position configuration --- //
-    // Assume that the first token is MXNB
-    // uint256 public token0Amount = 18500e6;
-    //uint256 public token1Amount = 1000e6;
-    uint256 public token0Amount = 184e4;
-    uint256 public token1Amount = 1e6;
+    uint256 public token0Amount = 18740e6;
+    uint256 public token1Amount = 1000e6;
 
     // range of the position, must be a multiple of tickSpacing
     int24 tickLower;

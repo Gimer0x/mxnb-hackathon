@@ -103,9 +103,6 @@ contract MEVMitigationHook is BaseHook {
 
         console2.logBytes32(bytes32(hookData));
 
-        // improve this, consider n blocks?
-        // Improving front running resistance of x*y=k market makers
-        // https://ethresear.ch/t/improving-front-running-resistance-of-x-y-k-market-makers/1281
         if (currentBlock[uint256(PoolId.unwrap(poolId))] == block.number) {
             if (lastBlockPrice[getPriceKey(block.number, poolId, direction)] > priceX96)
                 fee += LOWER_PRICE_FEE;
