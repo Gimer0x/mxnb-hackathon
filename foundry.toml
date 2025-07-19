@@ -12,6 +12,7 @@ gas_price = 10000000000
 [rpc_endpoints]
 sepolia = "${SEPOLIA_RPC_URL}"
 arbitrum_sepolia="${ARBITRUM_SEPOLIA_RPC}"
+network = "${SEPOLIA_RPC_URL}"
 local = "http://127.0.0.1:8545"
 
 PRIVATE_KEY_LOCAL = "${PRIVATE_KEY_LOCAL}"

@@ -27,8 +27,8 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
     uint160 startingPrice;
 
     // --- liquidity position configuration --- //
-    uint256 public token0Amount = 18740e6; // MXNB
-    uint256 public token1Amount = 1000e6; //USDC
+    uint256 public token0Amount = 10000e18; // MXNB
+    uint256 public token1Amount = 15000e18; //USDC
 
     // range of the position, must be a multiple of tickSpacing
     int24 tickLower;
@@ -46,6 +46,13 @@ contract CreatePoolAndAddLiquidityScript is BaseScript, LiquidityHelpers {
             tickSpacing: tickSpacing,
             hooks: hookContract
         });
+        /*PoolKey memory poolKey = PoolKey({
+            currency0: currency0,
+            currency1: currency1,
+            fee: lpFee,
+            tickSpacing: tickSpacing,
+            hooks: hookContract
+        }); */
 
         bytes memory hookData = new bytes(0);
 

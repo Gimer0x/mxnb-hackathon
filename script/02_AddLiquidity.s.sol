@@ -14,6 +14,7 @@ import {StateLibrary} from "@uniswap/v4-core/src/libraries/StateLibrary.sol";
 
 import {BaseScript} from "./base/BaseScript.sol";
 import {LiquidityHelpers} from "./base/LiquidityHelpers.sol";
+import {LPFeeLibrary} from "v4-core-hook/libraries/LPFeeLibrary.sol";
 
 contract AddLiquidityScript is BaseScript, LiquidityHelpers {
     using CurrencyLibrary for Currency;
@@ -27,8 +28,8 @@ contract AddLiquidityScript is BaseScript, LiquidityHelpers {
     int24 tickSpacing = 60;
 
     // --- liquidity position configuration --- //
-    uint256 public token0Amount = 1e6;
-    uint256 public token1Amount = 1e6;
+    uint256 public token0Amount = 100000e18;
+    uint256 public token1Amount = 150000e18;
 
     /////////////////////////////////////
 
@@ -39,7 +40,7 @@ contract AddLiquidityScript is BaseScript, LiquidityHelpers {
         PoolKey memory poolKey = PoolKey({
             currency0: currency0,
             currency1: currency1,
-            fee: lpFee,
+            fee: LPFeeLibrary.DYNAMIC_FEE_FLAG,
             tickSpacing: tickSpacing,
             hooks: hookContract
         });

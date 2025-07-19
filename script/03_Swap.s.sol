@@ -18,6 +18,14 @@ contract SwapScript is BaseScript {
             tickSpacing: 10,
             hooks: hookContract // This must match the pool
         });
+        /*PoolKey memory poolKey = PoolKey({
+            currency0: currency0,
+            currency1: currency1,
+            fee: 500,
+            tickSpacing: 10,
+            hooks: hookContract
+        }); */
+
         bytes memory hookData = new bytes(0);
 
         // We'll approve both, just for testing.
@@ -26,7 +34,7 @@ contract SwapScript is BaseScript {
 
         // Execute swap
         swapRouter.swapExactTokensForTokens({
-            amountIn: 1e6,
+            amountIn: 15e18,
             amountOutMin: 0, // Very bad, but we want to allow for unlimited price impact
             zeroForOne: true,
             poolKey: poolKey,

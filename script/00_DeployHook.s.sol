@@ -24,7 +24,7 @@ contract DeployHookScript is BaseScript {
 
         // Mine a salt that will produce a hook address with the correct flags
         // Arbitrum Sepolia
-        address feedAddress = 0x03121C1a9e6b88f56b27aF5cc065ee1FaF3CB4A9;
+        address feedAddress = 0x5fb1616F78dA7aFC9FF79e0371741a747D2a7F22;
         
         bytes memory constructorArgs = abi.encode(poolManager, feedAddress);
         (address hookAddress, bytes32 salt) =

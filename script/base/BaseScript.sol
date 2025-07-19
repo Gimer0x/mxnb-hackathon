@@ -24,14 +24,15 @@ contract BaseScript is Script {
     /////////////////////////////////////
     // --- Configure These ---
     /////////////////////////////////////
+
     // MXNB Arbitrum Sepolia
-    IERC20 internal constant token0 = IERC20(0x82B9e52b26A2954E113F94Ff26647754d5a4247D);
+    IERC20 internal constant token0 = IERC20(0xAB0fa85b306BED11297348660FFED7f1E48a82Cb);
 
     // USDC Arbitrum Sepolia
-    IERC20 internal constant token1 = IERC20(0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d);
+    IERC20 internal constant token1 = IERC20(0xBC25817B3aAFF773e5F4BEA9A73AA0bDd65B5D95);
 
     // Get hook address
-    IHooks constant hookContract = IHooks(address(0xc588c10682461BacFB24d14f75D1a60f0E9E6080));
+    IHooks constant hookContract = IHooks(address(0x0515E5b569611Db2eC5C6E0CD6cFc79bf9aca080));
 
     /////////////////////////////////////
 
